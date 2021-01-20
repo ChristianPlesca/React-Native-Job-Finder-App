@@ -5,7 +5,7 @@ class DeckScreen extends Component {
     render() {
         return (
             <View>
-                <Text>DeckScreen</Text>
+                <Text>Deck Screen</Text>
             </View>
         );
     }

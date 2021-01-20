@@ -1,19 +1,28 @@
 import React, { Component } from 'react';
+import { StatusBar } from 'expo-status-bar';
 import { } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Provider as PaperProvider } from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AuthScreen from './screens/AuthScreen';
 import WelcomeScreen from './screens/WelcomeScreen';
 import MapScreen from './screens/MapScreen';
 import DeckScreen from './screens/DeckScreen';
 import ReviewScreen from './screens/ReviewScreen';
+import SettingScreen from './screens/SettingScreen';
 
 class App extends Component {
   render() {
     const Stack = createStackNavigator();
     const Tab = createBottomTabNavigator();
+
+    const SettingScreenNav = () => (
+      <Stack.Navigator>
+        <Stack.Screen name="SettingScreen" component={SettingScreen} />
+      </Stack.Navigator>
+    );
 
     const MainScreenTabNav = () => (
       <Tab.Navigator
@@ -35,7 +44,7 @@ class App extends Component {
           },
         })}
         tabBarOptions={{
-          activeTintColor: 'tomato',
+          activeTintColor: '#2B7A78',
           inactiveTintColor: 'gray',
         }}
       >
@@ -46,17 +55,21 @@ class App extends Component {
       );
 
     return (
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen
-            name="Welcome"
-            component={WelcomeScreen}
-            options={{ title: 'Welcome Screen' }}
-          />
-          <Stack.Screen name="Auth" component={AuthScreen} />
-          <Stack.Screen name="TabNav" component={MainScreenTabNav} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <PaperProvider>
+        <StatusBar style="light" backgroundColor="rgba(0,0,0,0.3)" />
+        <NavigationContainer>
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen
+              name="Welcome"
+              component={WelcomeScreen}
+              options={{ title: 'Welcome Screen' }}
+            />
+            <Stack.Screen name="Auth" component={AuthScreen} />
+            <Stack.Screen name="TabNav" component={MainScreenTabNav} />
+            <Stack.Screen name="SettingsStack" component={SettingScreenNav} />
+          </Stack.Navigator>
+          </NavigationContainer>
+        </PaperProvider>
     );
   }
 }
