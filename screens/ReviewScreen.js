@@ -8,8 +8,16 @@ class ReviewScreen extends Component {
         return (
             <View style={containerStyle}>
                 <Appbar.Header style={appbarHeader}>
-                    <Appbar.Content title="Review" color={'#DEF2F1'} subtitle={'Review Your Saved Jobs'} />
-                        <Appbar.Action icon="cogs" size={35} onPress={() => this.props.navigation.navigate('SettingsStack')} />
+                    <Appbar.Content
+                        title="Review"
+                        color={'#DEF2F1'}
+                        subtitle={'Review Your Saved Jobs'} 
+                    />
+                    <Appbar.Action
+                        icon="cogs"
+                        size={35}
+                        onPress={() => this.props.navigation.navigate('SettingsStack')} 
+                    />
                     </Appbar.Header>
                 <Text>Review Screen</Text>
             </View>
@@ -27,6 +35,6 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         backgroundColor: '#2B7A78'
     }
-})
+});
 
 export default ReviewScreen;

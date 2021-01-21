@@ -15,7 +15,10 @@ const SLIDE_DATA = [
 class WelcomeScreen extends Component {
     render() {
       return (
-          <Slides data={SLIDE_DATA} />
+        <Slides
+          onCompletedTutorial={() => this.props.navigation.navigate('SignUpScreen')}
+          data={SLIDE_DATA} 
+        />
     );
     }
 }

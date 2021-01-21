@@ -10,11 +10,27 @@ import {
     ImageBackground,
     Image
 } from 'react-native';
-import { ProgressBar } from 'react-native-paper';
+import { ProgressBar, Button } from 'react-native-paper';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 class Slides extends Component {
+
+    renderLastSlide = (index) => {
+        if (index === this.props.data.length - 1) {
+            return (
+                <Button
+                    icon={'account-arrow-right'}
+                    color='#C5C6C7'
+                    style={{ marginTop: 30, borderRadius: 30, width: 200 }}
+                    onPress={this.props.onCompletedTutorial}
+                    mode='contained'
+                >
+                    Onwards
+                </Button>
+            );
+        }
+    }
 
     renderSlides = () => {
         const { data } = this.props;
@@ -32,6 +48,7 @@ class Slides extends Component {
                 <View key={slide.id} style={[styles.slideStyle]}>
                     <Text style={styles.slideText}>{slide.text}</Text>
                     <Image source={slide.image} style={styles.imageStyle} />
+                    {this.renderLastSlide(index)}
                     <Text style={styles.precentText}>{ completed }</Text>
                     <ProgressBar
                         progress={index !== data.length - 1 ? progressInterpuleted : 1}
@@ -89,7 +106,7 @@ const styles = StyleSheet.create({
         borderRadius: 30,
     },
     precentText: {
-        marginTop: 100,
+        marginTop: 60,
         color: '#66FCF1',
     }
 });
