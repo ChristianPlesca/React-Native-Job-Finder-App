@@ -1,9 +1,10 @@
+/* eslint-disable global-require */
 import React, { Component } from 'react';
 import { View, StyleSheet, Dimensions, Image } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { TextInput, Button, Text } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
-import { FacebookSocialButton, GoogleSocialButton } from "react-native-social-buttons";
+import { FacebookSocialButton, GoogleSocialButton } from 'react-native-social-buttons';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -20,18 +21,27 @@ class AuthScreen extends Component {
     onPasswordChanged = (text) => {
       this.props.onPasswordChanged(text);
     }
+    renderError = () => {
+        if (this.props.error) {
+          return (
+            <View style={{ marginTop: 15 }}>
+              <Text style={styles.errorTextStyle}>{this.props.error}</Text>
+            </View>
+          );
+        }
+      }
     renderButton = () => {
         if (this.props.loading) {
-          return (
-            <Button
-              dark
-              loading
-              style={styles.buttonStyle}
-              mode="contained"
-              >
-                LOADING ...
-            </Button>
-          )
+            return (
+                <Button
+                    dark
+                    loading
+                    style={styles.buttonStyle}
+                    mode="contained"
+                >
+                    LOADING ...
+                </Button>
+            );
         }
         return (
             <Button
@@ -39,8 +49,8 @@ class AuthScreen extends Component {
               style={styles.buttonStyle}
               icon={this.props.authButtonIcon}
               mode="contained"
-              onPress={() => {}}
-             >
+              onPress={this.props.onSubmit}
+            >
               {this.props.authButtonText}
             </Button>
           );
@@ -53,33 +63,38 @@ class AuthScreen extends Component {
                     style={styles.linearGradient}
                 >
                     <Image
-            style={styles.imageStyle}
-            source={require('../images/logo.png')}
-          />
+                        style={styles.imageStyle}
+                        source={require('../images/logo.png')}
+                    />
                 <TextInput
-                    style={{backgroundColor:'transparent', marginHorizontal:30, fontSize:18}}
+                    style={{ backgroundColor: 'transparent', marginHorizontal: 30, fontSize: 18 }}
                     label="Email"
-                    value={this.state.email}
+                    value={this.props.email}
                     selectionColor='#2B7A78'
                     underlineColor="#C5C6C7"
-                    onFocus={() => this.setState({ colorEmail: "#2B7A78" })}
+                    onFocus={() => this.setState({ colorEmail: '#2B7A78' })}
                     onChangeText={text => this.onEmailChanged(text)}
                     left={
                         <TextInput.Icon
                             color={this.state.colorEmail}
                             name="email"
                             size={35}
-                            style={{marginTop:10, marginLeft: -20 }}
+                            style={{ marginTop: 10, marginLeft: -20 }}
                         />
                     }
                 />
                 <TextInput
-                    style={{ marginTop: 10, backgroundColor: 'transparent', marginHorizontal: 30, fontSize: 18}}
+                        style={{
+                            marginTop: 10,
+                            backgroundColor: 'transparent',
+                            marginHorizontal: 30,
+                            fontSize: 18
+                        }}
                     label="Password"
-                    secureTextEntry={this.state.hidePass ? true : false}
-                    value={this.state.password}
+                    secureTextEntry={!!this.state.hidePass}
+                    value={this.props.password}
                     underlineColor="#C5C6C7"
-                    onFocus={() => this.setState({colorPassword:"#2B7A78"})}
+                    onFocus={() => this.setState({ colorPassword: '#2B7A78' })}
                     onChangeText={text => this.onPasswordChanged(text)}
                     left={
                         <TextInput.Icon
@@ -96,21 +111,23 @@ class AuthScreen extends Component {
                             size={35}
                             style={{ marginTop: 10, marginLeft: -20 }}
                             onPress={() => {
+                                // eslint-disable-next-line no-unused-expressions
                                 this.state.hidePass
-                                ? this.setState({hidePass: false, color: '#2B7A78'})
-                                : this.setState({hidePass: true, color: '#C5C6C7'});
+                                ? this.setState({ hidePass: false, color: '#2B7A78' })
+                                : this.setState({ hidePass: true, color: '#C5C6C7' });
                             }}
                         />
                     }
-                    />
-                     
+                />
+                    {this.renderError()}
                     {this.renderButton()}
                     <Button
                         color="#C5C6C7"
-                        onPress={this.props.onSwitchAccountPress}>
+                        onPress={this.props.onSwitchAccountPress}
+                    >
                         {this.props.switchLink}
                     </Button>
-                    <View style={{ marginVertical: 10, alignItems: 'center'}}>
+                    <View style={{ marginVertical: 10, alignItems: 'center' }}>
                         <Text style={{ fontSize: 20 }}>OR</Text>
                         <Ionicons
                             color={'#2B7A78'}
@@ -124,7 +141,7 @@ class AuthScreen extends Component {
                         textStyle={{ fontSize: 16 }}
                     />
                     <GoogleSocialButton 
-                        onPress={() => { }}
+                        onPress={this.props.googleButtonSubmit}
                         buttonViewStyle={styles.socialButtonStyle}
                         textStyle={{ fontSize: 16 }}
                     />
@@ -163,6 +180,13 @@ const styles = StyleSheet.create({
         height: 45,
         marginBottom: 10,
     },
+    errorTextStyle: {
+        fontSize: 20,
+        alignSelf: 'center',
+        color: 'red',
+        textAlign: 'center',
+        width: SCREEN_WIDTH - 100,
+      },
 });
 
 

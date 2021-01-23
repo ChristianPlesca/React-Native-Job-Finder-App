@@ -10,7 +10,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Provider as PaperProvider, DefaultTheme } from 'react-native-paper';
 import ReduxThunk from 'redux-thunk';
 import reducers from './reducers/';
-import initFirebase from './config/firebaseAuthConfig';
+import { initFirebase } from './config/firebaseAuthConfig';
 import LogInScreen from './screens/LogInScreen';
 import WelcomeScreen from './screens/WelcomeScreen';
 import MapScreen from './screens/MapScreen';
@@ -31,7 +31,7 @@ const theme = {
 };
 
 class App extends Component {
-  componentDidMount() {
+componentDidMount() {
     initFirebase();
   }
   render() {
