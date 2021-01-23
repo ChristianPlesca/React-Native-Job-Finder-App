@@ -1,7 +1,10 @@
 /* eslint-disable max-len */
 /* eslint-disable global-require */
+import _ from 'lodash';
 import React, { Component } from 'react';
 import { } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import AppLoading from 'expo-app-loading';
 import Slides from '../components/Slides';
 
 const SLIDE_DATA = [
@@ -13,10 +16,33 @@ const SLIDE_DATA = [
 ];
 
 class WelcomeScreen extends Component {
-    render() {
+  state = { token: null }
+
+  async componentDidMount() {
+    const token = await AsyncStorage.getItem('COMPLETED');
+    if (token) {
+      this.props.navigation.navigate('LogInScreen');
+      this.setState({ token });
+    } else {
+      this.setState({ token: false });
+    }
+  }
+
+  onCompletedTutorial = async () => {
+    try {
+      await AsyncStorage.setItem('COMPLETED', 'true');
+    } catch (e) {
+      console.log(e);
+    }
+    this.props.navigation.navigate('LogInScreen');
+  }
+  render() {
+    if (_.isNull(this.state.token)) {
+      return <AppLoading />;
+      }
       return (
         <Slides
-          onCompletedTutorial={() => this.props.navigation.navigate('LogInScreen')}
+          onCompletedTutorial={this.onCompletedTutorial}
           data={SLIDE_DATA} 
         />
     );

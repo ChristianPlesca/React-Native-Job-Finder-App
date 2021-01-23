@@ -72,7 +72,7 @@ const loginFacebookSuccess = (dispatch, user, navigation) => {
     payload: user,
   });
   navigation.navigate('TabNav');
-}
+};
 
 
 const loginGoogleSuccess = (dispatch, user, navigation) => {
