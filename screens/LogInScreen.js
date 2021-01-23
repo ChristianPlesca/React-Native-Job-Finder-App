@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
 import { } from 'react-native';
 import { connect } from 'react-redux';
-import { emailChanged, passwordChanged, loginUser, loginGoogle, clearForm } from '../actions';
+import {
+    emailChanged,
+    passwordChanged,
+    loginUser,
+    loginGoogle,
+    clearForm,
+    loginFacebook,
+} from '../actions';
 import Auth from '../components/Auth';
 
 
@@ -23,6 +30,7 @@ class LogInScreen extends Component {
                 password={this.props.password}
                 loading={this.props.loading}
                 onSubmit={() => this.props.loginUser({ email, password, navigation })}
+                facebookButtonSubmit={() => this.props.loginFacebook(navigation)}
                 googleButtonSubmit={() => this.props.loginGoogle(navigation)}
                 error={this.props.error}
             />
@@ -44,5 +52,6 @@ export default connect(mapStateToProps,
         passwordChanged,
         loginUser,
         loginGoogle,
-        clearForm
+        clearForm,
+        loginFacebook
     })(LogInScreen);

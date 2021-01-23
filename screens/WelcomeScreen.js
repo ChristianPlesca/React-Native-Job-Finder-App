@@ -16,7 +16,7 @@ class WelcomeScreen extends Component {
     render() {
       return (
         <Slides
-          onCompletedTutorial={() => this.props.navigation.navigate('SignUpScreen')}
+          onCompletedTutorial={() => this.props.navigation.navigate('LogInScreen')}
           data={SLIDE_DATA} 
         />
     );

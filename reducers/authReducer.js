@@ -7,7 +7,8 @@ import {
     AUTH_FAILED,
     LOGIN_USER,
     SIGN_UP_USER,
-    CLEAR_FORM
+    CLEAR_FORM,
+    LOGIN_FACEBOOK_SUCCESS,
 } from '../actions/types';
   
 const INITIAL_STATE = {
@@ -29,7 +30,7 @@ export default (state = INITIAL_STATE, action) => {
       case SIGN_UP_USER:
           return { ...state, loading: true, error: '' };
       case AUTH_FAILED:
-          return { ...state, error: action.payload, loading: false, email: '', password: '' };
+          return { ...state, error: action.payload, loading: false };
         case LOGIN_USER_SUCCESS:
           return { ...state, user: action.payload, error: '', loading: false };
       case LOGIN_USER:
@@ -37,7 +38,9 @@ export default (state = INITIAL_STATE, action) => {
       case LOGIN_GOOGLE_SUCCESS:
           return { ...state, user: action.payload, error: '', loading: false };
       case CLEAR_FORM:
-          return { INITIAL_STATE };
+            return { ...state, user: null, password: '', email: '', error: '' };
+      case LOGIN_FACEBOOK_SUCCESS: 
+          return { ...state, user: action.payload, error: '', loading: false };
       default:
         return state;
     }

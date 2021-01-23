@@ -88,8 +88,8 @@ componentDidMount() {
                 component={WelcomeScreen}
                 options={{ title: 'Welcome Screen' }}
               />
-              <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
               <Stack.Screen name="LogInScreen" component={LogInScreen} />
+              <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
               <Stack.Screen name="TabNav" component={MainScreenTabNav} />
               <Stack.Screen name="SettingsStack" component={SettingScreenNav} />
             </Stack.Navigator>

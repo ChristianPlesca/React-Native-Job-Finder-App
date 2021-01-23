@@ -1,5 +1,6 @@
 import firebase from 'firebase';
 import * as Google from 'expo-google-app-auth';
+import * as Facebook from 'expo-facebook';
 import {
     EMAIL_CHANGED,
     PASSWORD_CHANGED,
@@ -10,8 +11,9 @@ import {
     SIGN_UP_USER,
     LOGIN_GOOGLE_SUCCESS,
     CLEAR_FORM,
+    LOGIN_FACEBOOK_SUCCESS,
 } from './types';
-import { logInGoogleInit } from '../config/firebaseAuthConfig';
+import { logInGoogleInit, facebookAppId } from '../config/firebaseAuthConfig';
 
 export const emailChanged = (text) => ({
     type: EMAIL_CHANGED,
@@ -23,6 +25,19 @@ export const passwordChanged = (text) => ({
     payload: text,
 });
 
+
+export const loginFacebook = (navigation) => (dispatch) => {
+  Facebook.initializeAsync({ appId: facebookAppId });
+  Facebook.logInWithReadPermissionsAsync({
+    permissions: ['public_profile', 'email'],
+  }).then((user) => {
+    if (user.type === 'success') {
+      loginFacebookSuccess(dispatch, user.userId, navigation);
+    }
+  })
+    .catch((err) => loginFail(dispatch, err));
+};
+
 export const loginGoogle = (navigation) => (dispatch) => {
     Google.logInAsync(logInGoogleInit)
       .then((user) => {
@@ -30,7 +45,7 @@ export const loginGoogle = (navigation) => (dispatch) => {
           loginGoogleSuccess(dispatch, user, navigation);
         }
       })
-      .catch((error) => loginGoogleFail(dispatch, error));
+      .catch((error) => loginFail(dispatch, error));
   };
 
 export const clearForm = () => (dispatch) => {
@@ -41,22 +56,24 @@ export const signUpUser = ({ email, password, navigation }) => (dispatch) => {
     dispatch({ type: SIGN_UP_USER });
     firebase.auth().createUserWithEmailAndPassword(email, password)
       .then((user) => signUpUserSuccess(dispatch, user, navigation))
-      .catch((error) => signUpFail(dispatch, error));
+      .catch((error) => loginFail(dispatch, error));
   };
 
 export const loginUser = ({ email, password, navigation }) => (dispatch) => {
     dispatch({ type: LOGIN_USER });
     firebase.auth().signInWithEmailAndPassword(email, password)
       .then((user) => loginUserSuccess(dispatch, user, navigation))
-      .catch((error) => loginUserFail(dispatch, error));
-  };
-
-const loginGoogleFail = (dispatch, error) => {
-  dispatch({
-    type: AUTH_FAILED,
-    payload: error.message
-  });
+      .catch((error) => loginFail(dispatch, error));
 };
+  
+const loginFacebookSuccess = (dispatch, user, navigation) => {
+  dispatch({
+    type: LOGIN_FACEBOOK_SUCCESS,
+    payload: user,
+  });
+  navigation.navigate('TabNav');
+}
+
 
 const loginGoogleSuccess = (dispatch, user, navigation) => {
   dispatch({
@@ -64,13 +81,6 @@ const loginGoogleSuccess = (dispatch, user, navigation) => {
     payload: user,
   });
   navigation.navigate('TabNav');
-};
-
-const loginUserFail = (dispatch, error) => {
-  dispatch({
-    type: AUTH_FAILED,
-    payload: error.message,
-  });
 };
 
 const loginUserSuccess = (dispatch, user, navigation) => {
@@ -81,7 +91,7 @@ const loginUserSuccess = (dispatch, user, navigation) => {
   navigation.navigate('TabNav');
 };
 
-const signUpFail = (dispatch, error) => {
+const loginFail = (dispatch, error) => {
   dispatch({
     type: AUTH_FAILED,
     payload: error.message,

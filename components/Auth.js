@@ -1,7 +1,7 @@
 /* eslint-disable global-require */
 import React, { Component } from 'react';
 import { View, StyleSheet, Dimensions, Image } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+// import Ionicons from 'react-native-vector-icons/Ionicons';
 import { TextInput, Button, Text } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
 import { FacebookSocialButton, GoogleSocialButton } from 'react-native-social-buttons';
@@ -127,16 +127,16 @@ class AuthScreen extends Component {
                     >
                         {this.props.switchLink}
                     </Button>
-                    <View style={{ marginVertical: 10, alignItems: 'center' }}>
+                    {/* <View style={{ marginVertical: 10, alignItems: 'center' }}>
                         <Text style={{ fontSize: 20 }}>OR</Text>
                         <Ionicons
                             color={'#2B7A78'}
                             name="arrow-down-circle"
                             size={45}
                         />
-                    </View>
+                    </View> */}
                     <FacebookSocialButton
-                        onPress={() => { }}
+                        onPress={this.props.facebookButtonSubmit}
                         buttonViewStyle={styles.socialButtonStyle} 
                         textStyle={{ fontSize: 16 }}
                     />
@@ -179,6 +179,7 @@ const styles = StyleSheet.create({
         width: SCREEN_WIDTH - 140,
         height: 45,
         marginBottom: 10,
+        marginTop: 10
     },
     errorTextStyle: {
         fontSize: 20,
