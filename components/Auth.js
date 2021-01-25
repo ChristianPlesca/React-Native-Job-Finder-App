@@ -3,10 +3,9 @@ import React, { Component } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import _ from 'lodash';
 import AppLoading from 'expo-app-loading';
-import { View, StyleSheet, Dimensions, Image } from 'react-native';
+import { View, StyleSheet, Dimensions, Image, ImageBackground } from 'react-native';
 // import Ionicons from 'react-native-vector-icons/Ionicons';
 import { TextInput, Button, Text } from 'react-native-paper';
-import { LinearGradient } from 'expo-linear-gradient';
 import { FacebookSocialButton, GoogleSocialButton } from 'react-native-social-buttons';
 
 
@@ -75,9 +74,9 @@ class AuthScreen extends Component {
         }
         return (
             <View style={{ flex: 1, justifyContent: 'center' }}>
-                <LinearGradient
-                    colors={['#2E3047', '#2E3047', '#3C3F58']}
-                    style={styles.linearGradient}
+                <ImageBackground
+                source={require('../images/welcome-backgroud.png')}
+                    style={styles.image}
                 >
                     <Image
                         style={styles.imageStyle}
@@ -162,7 +161,7 @@ class AuthScreen extends Component {
                         buttonViewStyle={styles.socialButtonStyle}
                         textStyle={{ fontSize: 16 }}
                     />
-                    </LinearGradient>
+                    </ImageBackground>
             </View>
         );
     }
@@ -204,7 +203,12 @@ const styles = StyleSheet.create({
         color: 'red',
         textAlign: 'center',
         width: SCREEN_WIDTH - 100,
-      },
+    },
+    image: {
+        flex: 1,
+        resizeMode: 'cover',
+        justifyContent: 'center',
+    },
 });
 
 export default AuthScreen;

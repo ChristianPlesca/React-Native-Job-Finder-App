@@ -60,8 +60,6 @@ componentDidMount() {
             } else if (route.name === 'Review') {
               iconName = focused ? 'documents' : 'documents-outline';
             }
-
-            // You can return any component that you like here!
             return <Ionicons name={iconName} size={30} color={color} />;
           },
         })}
