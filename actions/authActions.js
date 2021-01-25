@@ -1,6 +1,7 @@
 import firebase from 'firebase';
 import * as Google from 'expo-google-app-auth';
 import * as Facebook from 'expo-facebook';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
     EMAIL_CHANGED,
     PASSWORD_CHANGED,
@@ -12,6 +13,8 @@ import {
     LOGIN_GOOGLE_SUCCESS,
     CLEAR_FORM,
     LOGIN_FACEBOOK_SUCCESS,
+    SET_TOKEN,
+    CLEAR_STATE,
 } from './types';
 import { logInGoogleInit, facebookAppId } from '../config/firebaseAuthConfig';
 
@@ -25,13 +28,13 @@ export const passwordChanged = (text) => ({
     payload: text,
 });
 
-
 export const loginFacebook = (navigation) => (dispatch) => {
   Facebook.initializeAsync({ appId: facebookAppId });
   Facebook.logInWithReadPermissionsAsync({
     permissions: ['public_profile', 'email'],
   }).then((user) => {
     if (user.type === 'success') {
+      setToken(user.token, dispatch);
       loginFacebookSuccess(dispatch, user.userId, navigation);
     }
   })
@@ -42,7 +45,8 @@ export const loginGoogle = (navigation) => (dispatch) => {
     Google.logInAsync(logInGoogleInit)
       .then((user) => {
         if (user.type === 'success') {
-          loginGoogleSuccess(dispatch, user, navigation);
+          setToken(user.accessToken, dispatch);
+          loginGoogleSuccess(dispatch, user.user.id, navigation);
         }
       })
       .catch((error) => loginFail(dispatch, error));
@@ -62,7 +66,10 @@ export const signUpUser = ({ email, password, navigation }) => (dispatch) => {
 export const loginUser = ({ email, password, navigation }) => (dispatch) => {
     dispatch({ type: LOGIN_USER });
     firebase.auth().signInWithEmailAndPassword(email, password)
-      .then((user) => loginUserSuccess(dispatch, user, navigation))
+      .then(({ user }) => {
+        setToken(user.refreshToken, dispatch);
+        loginUserSuccess(dispatch, user.uid, navigation);
+      })
       .catch((error) => loginFail(dispatch, error));
 };
   
@@ -105,3 +112,30 @@ const signUpUserSuccess = (dispatch, user, navigation) => {
   });
   navigation.navigate('LogInScreen');
 };
+
+export const setToken = async (user, dispatch) => {
+  try {
+    await AsyncStorage.setItem('token', user);
+    getToken(dispatch);
+  } catch (error) {
+    loginFail(dispatch, error);
+  }
+};
+
+export const getToken = async (dispatch) => {
+  const token = await AsyncStorage.getItem('token');
+  dispatch({
+    type: SET_TOKEN,
+    payload: token,
+  });
+};
+
+export const logOut = (navigation) => async (dispatch) => {
+    dispatch({ type: CLEAR_STATE });
+    try {
+      await AsyncStorage.removeItem('token');
+    } catch (e) {
+      console.log(e);
+    }
+    navigation.navigate('LogInScreen');
+  };

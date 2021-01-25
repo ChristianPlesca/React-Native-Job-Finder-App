@@ -33,6 +33,7 @@ class LogInScreen extends Component {
                 facebookButtonSubmit={() => this.props.loginFacebook(navigation)}
                 googleButtonSubmit={() => this.props.loginGoogle(navigation)}
                 error={this.props.error}
+                navigation={this.props.navigation}
             />
         );
     }

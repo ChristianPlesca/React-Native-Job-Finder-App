@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
+import { connect } from 'react-redux';
 
 class MapScreen extends Component {
     render() {
@@ -11,4 +12,8 @@ class MapScreen extends Component {
     }
 }
 
-export default MapScreen;
+const mapStateToProps = (state) => ({
+    auth: state.auth
+});
+
+export default connect(mapStateToProps)(MapScreen);

@@ -12,3 +12,7 @@ export const LOGIN_GOOGLE_USER = 'login_google_user';
 export const LOGIN_GOOGLE_SUCCESS = 'login_google_success';
 // FACEBOOK AUTH
 export const LOGIN_FACEBOOK_SUCCESS = 'login_facebook_success';
+// TOKEN 
+export const SET_TOKEN = 'set_token';
+// CLEAR STATE
+export const CLEAR_STATE = 'clear_state';

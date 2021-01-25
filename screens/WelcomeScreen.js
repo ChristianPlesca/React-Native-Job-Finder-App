@@ -30,7 +30,7 @@ class WelcomeScreen extends Component {
 
   onCompletedTutorial = async () => {
     try {
-      await AsyncStorage.setItem('COMPLETED', 'true');
+      await AsyncStorage.setItem('COMPLETED');
     } catch (e) {
       console.log(e);
     }

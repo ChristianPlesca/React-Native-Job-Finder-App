@@ -1,10 +1,14 @@
 /* eslint-disable global-require */
 import React, { Component } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import _ from 'lodash';
+import AppLoading from 'expo-app-loading';
 import { View, StyleSheet, Dimensions, Image } from 'react-native';
 // import Ionicons from 'react-native-vector-icons/Ionicons';
 import { TextInput, Button, Text } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
 import { FacebookSocialButton, GoogleSocialButton } from 'react-native-social-buttons';
+
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -13,7 +17,17 @@ class AuthScreen extends Component {
         colorPassword: '#C5C6C7',
         colorEmail: '#C5C6C7',
         hidePass: true,
-        color: '#C5C6C7'
+        color: '#C5C6C7',
+        authToken: null,
+    }
+    async componentDidMount() {
+        const token = await AsyncStorage.getItem('token');
+        if (token) {
+            this.props.navigation.navigate('TabNav');
+            this.setState({ authToken: token });
+        } else {
+            this.setState({ authToken: false });
+        }
     }
     onEmailChanged = (text) => {
       this.props.onEmailChanged(text);
@@ -56,6 +70,9 @@ class AuthScreen extends Component {
           );
     }
     render() {
+        if (_.isNull(this.state.authToken)) {
+            return <AppLoading />;
+        }
         return (
             <View style={{ flex: 1, justifyContent: 'center' }}>
                 <LinearGradient
@@ -189,6 +206,5 @@ const styles = StyleSheet.create({
         width: SCREEN_WIDTH - 100,
       },
 });
-
 
 export default AuthScreen;
