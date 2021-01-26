@@ -18,6 +18,7 @@ import DeckScreen from './screens/DeckScreen';
 import ReviewScreen from './screens/ReviewScreen';
 import SettingScreen from './screens/SettingScreen';
 import SignUpScreen from './screens/SignUpScreen';
+import MarkersScreen from './screens/MarkersScreen';
 
 const theme = {
   ...DefaultTheme,
@@ -59,6 +60,8 @@ componentDidMount() {
                 iconName = focused ? 'albums' : 'albums-outline';
             } else if (route.name === 'Review') {
               iconName = focused ? 'documents' : 'documents-outline';
+            } else if (route.name === 'Markers') {
+              iconName = focused ? 'md-location' : 'md-location-outline';
             }
             return <Ionicons name={iconName} size={30} color={color} />;
           },
@@ -69,6 +72,7 @@ componentDidMount() {
         }}
       >
           <Tab.Screen name="Map" component={MapScreen} />
+          <Tab.Screen name="Markers" component={MarkersScreen} />
           <Tab.Screen name="Deck" component={DeckScreen} />
           <Tab.Screen name="Review" component={ReviewScreen} />
         </Tab.Navigator>

@@ -16,3 +16,6 @@ export const LOGIN_FACEBOOK_SUCCESS = 'login_facebook_success';
 export const SET_TOKEN = 'set_token';
 // CLEAR STATE
 export const CLEAR_STATE = 'clear_state';
+// Jobs
+export const FETCH_JOBS = 'fetch_jobs';
+export const JOB_TITLE_CHANGE = 'job_title_change';
