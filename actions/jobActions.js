@@ -1,9 +1,11 @@
 import axios from 'axios';
-import reverseGeocode from 'latlng-to-zip';
-import qs from 'qs';
 import Geocoder from 'react-native-geocoding';
 import { geoCodeApi, jobAppID, jobAppKEY } from '../config/firebaseAuthConfig';
-import { FETCH_JOBS, JOB_TITLE_CHANGE } from './types';
+import {
+    FETCH_JOBS,
+    JOB_TITLE_CHANGE,
+    ERROR, CLEAR_ERROR,
+} from './types';
 
 const ROOT_URL = 'https://api.adzuna.com/v1/api/jobs/';
 
@@ -13,10 +15,16 @@ export const jobTitleChange = (text) => (dispatch) => {
             type: JOB_TITLE_CHANGE,
             payload: text,
         });
+};
+    
+export const clearErrorMessage = () => (dispatch) => {
+        dispatch({
+            type: CLEAR_ERROR
+        });
     };
 
 const fetchJobs = async (country, postalCode, searchQuery, dispatch, navigation) => {
-    console.log(navigation)
+    // eslint-disable-next-line max-len
     const URL = `${ROOT_URL}${country}/search/1?app_id=${jobAppID}&app_key=${jobAppKEY}&results_per_page=10&what=${searchQuery}&where=${postalCode}&content-type=application/json`;
     try {
         const { data } = await axios.get(URL);
@@ -24,14 +32,16 @@ const fetchJobs = async (country, postalCode, searchQuery, dispatch, navigation)
             type: FETCH_JOBS,
             payload: data.results
         });
-        navigation.navigate('TabNav', { screen: 'Markers' })
+        navigation.navigate('TabNav', { screen: 'Markers' });
     } catch (e) {
-        console.log(e);
+        dispatch({
+            type: ERROR,
+            payload: true,
+        });
     }
 };
 
-export const setCountry = (region, searchQuery, navigation) => {
-    return (dispatch) => {
+export const setCountry = (region, searchQuery, navigation) => (dispatch) => {
     Geocoder.init(geoCodeApi);
     Geocoder.from(region)
         .then(json => {
@@ -46,8 +56,7 @@ export const setCountry = (region, searchQuery, navigation) => {
                 }
             }
             fetchJobs(country, postalCode, searchQuery, dispatch, navigation);
-        }).catch(error => {
-            console.log(error)
+        }).catch((e) => {
+            console.log(e);       
         });
-    }
-};
+    };

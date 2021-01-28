@@ -3,10 +3,10 @@ import _ from 'lodash';
 import MapView from 'react-native-maps';
 import * as Location from 'expo-location';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { View, Dimensions, StyleSheet, Modal, Text } from 'react-native';
+import { View, Dimensions, StyleSheet, Modal, Text, Alert } from 'react-native';
 import { connect } from 'react-redux';
 import { ActivityIndicator, Button, TextInput } from 'react-native-paper';
-import { jobTitleChange, setCountry } from '../actions';
+import { jobTitleChange, setCountry, clearErrorMessage } from '../actions';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -22,7 +22,7 @@ class MapScreen extends Component {
         color: 'red',
         colorTitleSearch: 'black',
         modalVisible: true,
-        showsUserLocation: false
+        showsUserLocation: false,
     };
 
     async componentDidMount() {
@@ -40,7 +40,7 @@ class MapScreen extends Component {
                         longitudeDelta: 5,
                         latitudeDelta: 5,
                     },
-                    showsUserLocation: false
+                    showsUserLocation: false,
                 });
             } else {
                 try {
@@ -99,6 +99,15 @@ class MapScreen extends Component {
                         style={styles.activityIndicatorStyle} 
             />
           );
+        } else if (this.props.contryUnsuported) {
+            Alert.alert(
+                'Country Unsuported',
+                'We are really sorry but we dont yet support services for your country.',
+                [
+                  { text: 'I understand', onPress: () => this.props.clearErrorMessage() }
+                ],
+                { cancelable: false }
+              );
         }
         return (
             <View style={styles.container}>
@@ -243,6 +252,12 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = ({ job }) => ({
     searchQuery: job.searchQuery,
+    contryUnsuported: job.contryUnsuported,
 });
 
-export default connect(mapStateToProps, { jobTitleChange, setCountry })(MapScreen);
+export default connect(mapStateToProps,
+    {
+        jobTitleChange,
+        setCountry,
+        clearErrorMessage,
+    })(MapScreen);

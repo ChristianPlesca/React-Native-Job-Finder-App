@@ -19,3 +19,5 @@ export const CLEAR_STATE = 'clear_state';
 // Jobs
 export const FETCH_JOBS = 'fetch_jobs';
 export const JOB_TITLE_CHANGE = 'job_title_change';
+export const ERROR = 'error';
+export const CLEAR_ERROR = 'clear_error';
