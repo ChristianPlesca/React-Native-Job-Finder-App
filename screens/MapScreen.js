@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { View, Dimensions, StyleSheet, Modal, Text } from 'react-native';
 import { connect } from 'react-redux';
 import { ActivityIndicator, Button, TextInput } from 'react-native-paper';
-import { jobTitleChange } from '../actions';
+import { jobTitleChange, setCountry } from '../actions';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -22,6 +22,7 @@ class MapScreen extends Component {
         color: 'red',
         colorTitleSearch: 'black',
         modalVisible: true,
+        showsUserLocation: false
     };
 
     async componentDidMount() {
@@ -30,18 +31,20 @@ class MapScreen extends Component {
             this.setState({ modalVisible: false });
         }
         try {
-            const { granted } = await Location.requestPermissionsAsync();
-            if (!granted) {
+            const { status } = await Location.requestPermissionsAsync();
+            if (status !== 'granted') {
                 this.setState({
                     region: {
                         longitude: 0.1278,
                         latitude: 51.5074,
                         longitudeDelta: 5,
                         latitudeDelta: 5,
-                    }
+                    },
+                    showsUserLocation: false
                 });
-             } else {
-                const location = await Location.getCurrentPositionAsync({});
+            } else {
+                try {
+                    const location = await Location.getCurrentPositionAsync({});
                 this.setState({
                     region:
                     {
@@ -49,8 +52,20 @@ class MapScreen extends Component {
                         latitude: location.coords.latitude,
                         longitudeDelta: 0.10,
                         latitudeDelta: 0.09,
-                    }
-            });
+                    },
+                    showsUserLocation: true
+                });
+                } catch (e) {
+                    this.setState({
+                        region: {
+                            longitude: 0.1278,
+                            latitude: 51.5074,
+                            longitudeDelta: 5,
+                            latitudeDelta: 5,
+                        },
+                        showsUserLocation: false
+                    });
+            }
             }
         } catch (e) {
             console.log(e);
@@ -67,6 +82,12 @@ class MapScreen extends Component {
     onCompleteModal = async () => {
         this.setState({ modalVisible: false });
         await AsyncStorage.setItem('modalVisible', 'True');
+    }
+
+    onSearchJob = () => {
+        const { searchQuery, navigation } = this.props;
+        const { region } = this.state;
+        this.props.setCountry(region, searchQuery, navigation);
     }
 
     render() {
@@ -109,7 +130,8 @@ class MapScreen extends Component {
                     </View>
                 </Modal>
                 </View>
-              <MapView 
+              <MapView
+                showsUserLocation={this.state.showsUserLocation}
                 style={styles.map} 
                 region={this.state.region}
                 onRegionChangeComplete={this.onRegionChangeComplete}
@@ -140,7 +162,7 @@ class MapScreen extends Component {
                 style={styles.buttonStyle}
                 icon={'map-search-outline'}
                 mode="contained"
-                onPress={this.props.onSubmit}
+                onPress={this.onSearchJob}
               >
                 Search
             </Button>
@@ -223,4 +245,4 @@ const mapStateToProps = ({ job }) => ({
     searchQuery: job.searchQuery,
 });
 
-export default connect(mapStateToProps, { jobTitleChange })(MapScreen);
+export default connect(mapStateToProps, { jobTitleChange, setCountry })(MapScreen);
