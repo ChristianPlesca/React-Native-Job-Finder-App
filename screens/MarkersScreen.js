@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-// eslint-disable-next-line import/no-duplicates
 import MapView from 'react-native-maps';
-// eslint-disable-next-line no-duplicate-imports
 import { Marker } from 'react-native-maps';
 import { View, StyleSheet, Dimensions, Alert } from 'react-native';
 import { connect } from 'react-redux';
@@ -22,25 +20,26 @@ class MarkersScreen extends Component {
 
     render() {
         if (this.props.results.length === 0) {
-                Alert.alert(
-                    'We are Sorry',
-                    'We could not find any results for this location, please try to set your location',
-                    [
-                        { text: 'I understand', onPress: () => this.props.navigation.goBack() }
-                    ],
-                    { cancelable: false }
-                )
+            Alert.alert(
+                'We are Sorry',
+                // eslint-disable-next-line max-len
+                'We could not find any results for this location, please try to set your location',
+                [
+                    { text: 'I understand', onPress: () => this.props.navigation.goBack() }
+                ],
+                { cancelable: false }
+            );
             return (
                 <MapView
                     style={styles.map}
                     region={{
-                    longitude: 0.1278,
-                    latitude: 51.5074,
-                    longitudeDelta: 5.5,
-                    latitudeDelta: 5.5,
+                        longitude: 0.1278,
+                        latitude: 51.5074,
+                        longitudeDelta: 5.5,
+                        latitudeDelta: 5.5,
                     }}
                 />
-            )
+            );
         }
         return (
             <View>
@@ -65,7 +64,7 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').height,
     }
-})
+});
 
 const mapStateToProps = ({ job }) => ({
     results: job.results,

@@ -90,6 +90,33 @@ class MapScreen extends Component {
         this.props.setCountry(region, searchQuery, navigation);
     }
 
+    renderSearchButton = () => {
+        if (this.props.loading) {
+            return (
+                <Button
+                    dark
+                    loading
+                    style={styles.buttonStyle}
+                    mode="contained"
+                >
+                    Searching ...
+                </Button>
+            );
+        }
+
+        return (
+            <Button
+                dark
+                style={styles.buttonStyle}
+                icon={'map-search-outline'}
+                mode="contained"
+                onPress={this.onSearchJob}
+            >
+                Search
+            </Button>
+        );
+    }
+
     render() {
         if (_.isNull(this.state.region.latitude && this.state.region.latitude)) {
             return (<ActivityIndicator
@@ -146,7 +173,12 @@ class MapScreen extends Component {
                 onRegionChangeComplete={this.onRegionChangeComplete}
               />
                 <View style={styles.buttonContainer}>
-                <TextInput
+                    <TextInput
+                        theme={{
+                            colors: {
+                                placeholder: '#2B7A78', text: '#2B7A78',
+                            }
+                        }}
                         style={{
                             backgroundColor: 'transparent',
                             marginHorizontal: 40,
@@ -162,19 +194,11 @@ class MapScreen extends Component {
                             color='#2B7A78'
                             name="pen"
                             size={35}
-                            style={{ marginTop: 10, marginLeft: -20 }}
+                            style={{ marginTop: 10, marginLeft: -15 }}
                         />
                     }
-                />
-              <Button
-                dark
-                style={styles.buttonStyle}
-                icon={'map-search-outline'}
-                mode="contained"
-                onPress={this.onSearchJob}
-              >
-                Search
-            </Button>
+                    />
+              {this.renderSearchButton()}
             </View>
             </View>
           );
@@ -253,6 +277,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = ({ job }) => ({
     searchQuery: job.searchQuery,
     contryUnsuported: job.contryUnsuported,
+    loading: job.loading,
 });
 
 export default connect(mapStateToProps,

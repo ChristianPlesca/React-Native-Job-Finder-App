@@ -5,6 +5,7 @@ import {
     FETCH_JOBS,
     JOB_TITLE_CHANGE,
     ERROR, CLEAR_ERROR,
+    INITLIALIZE_FETCH,
 } from './types';
 
 const ROOT_URL = 'https://api.adzuna.com/v1/api/jobs/';
@@ -24,6 +25,7 @@ export const clearErrorMessage = () => (dispatch) => {
     };
 
 const fetchJobs = async (country, postalCode, searchQuery, dispatch, navigation) => {
+    dispatch({ type: INITLIALIZE_FETCH });
     // eslint-disable-next-line max-len
     const URL = `${ROOT_URL}${country}/search/1?app_id=${jobAppID}&app_key=${jobAppKEY}&results_per_page=10&what=${searchQuery}&where=${postalCode}&content-type=application/json`;
     try {
