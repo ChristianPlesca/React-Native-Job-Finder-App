@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
     },
     buttonStyle: {
         marginHorizontal: 20,
-        width: SCREEN_WIDTH - 80,
+        width: SCREEN_WIDTH - 200,
         alignSelf: 'center',
         padding: 5,
         borderRadius: 7,

@@ -73,7 +73,7 @@ componentDidMount() {
       >
           <Tab.Screen name="Map" component={MapScreen} />
           <Tab.Screen name="Markers" component={MarkersScreen} />
-          <Tab.Screen name="Deck" component={DeckScreen} />
+          <Tab.Screen name="Deck" options={{ title: 'Review' }} component={DeckScreen} />
           <Tab.Screen name="Review" component={ReviewScreen} />
         </Tab.Navigator>
     );

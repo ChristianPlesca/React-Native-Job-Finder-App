@@ -3,7 +3,7 @@ import {
     JOB_TITLE_CHANGE,
     ERROR,
     CLEAR_ERROR,
-    INITLIALIZE_FETCH
+    INITLIALIZE_FETCH,
 } from '../actions/types';
 
 const INITIAL_STATE = {

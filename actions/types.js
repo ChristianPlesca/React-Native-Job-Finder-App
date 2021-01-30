@@ -22,4 +22,6 @@ export const JOB_TITLE_CHANGE = 'job_title_change';
 export const ERROR = 'error';
 export const CLEAR_ERROR = 'clear_error';
 export const INITLIALIZE_FETCH = 'initialize_fetch';
+export const PRESSED_RIGHT = 'pressed_right';
+export const PRESSED_LEFT = 'pressed_left';
 

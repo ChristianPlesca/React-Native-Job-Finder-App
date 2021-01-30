@@ -6,8 +6,12 @@ import {
   Dimensions,
   LayoutAnimation,
   UIManager,
-  Platform
+  Platform,
+  LogBox,
 } from 'react-native';
+import { Card, Title, Paragraph, Avatar, IconButton } from 'react-native-paper';
+import MapView from 'react-native-maps';
+import { Marker } from 'react-native-maps';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SWIPE_THRESHOLD = 0.25 * SCREEN_WIDTH;
@@ -22,7 +26,7 @@ class Swipe extends Component {
 
   constructor(props) {
     super(props);
-
+    LogBox.ignoreLogs(['componentWillReceiveProps']);
     const position = new Animated.ValueXY();
     const panResponder = PanResponder.create({
       onStartShouldSetPanResponder: () => true,
@@ -43,7 +47,7 @@ class Swipe extends Component {
     this.state = { panResponder, position, index: 0 };
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps = (nextProps) => {
     if (nextProps.data !== this.props.data) {
       this.setState({ index: 0 });
     }
@@ -55,7 +59,7 @@ class Swipe extends Component {
   }
 
 
-  onSwipeComplete(direction) {
+  onSwipeComplete = (direction) => {
     const { onSwipeLeft, onSwipeRight, data } = this.props;
     const item = data[this.state.index];
 
@@ -86,13 +90,79 @@ class Swipe extends Component {
       }
     
     forceSwipe = (direction) => {
-        const x = direction === 'right' ? SCREEN_WIDTH : -SCREEN_WIDTH;
+        const x = direction === 'right' ? SCREEN_WIDTH + 100 : -SCREEN_WIDTH - 100;
         Animated.timing(this.state.position, {
           toValue: { x, y: 0 },
           duration: SWIPE_OUT_DURATION,
           useNativeDriver: false
         }).start(() => this.onSwipeComplete(direction));
-      }
+  }
+  
+  renderCard = (job) => {
+    const initialRegion = {
+      longitude: job.longitude,
+      latitude: job.latitude,
+      latitudeDelta: 0.045,
+      longitudeDelta: 0.02
+    };
+    const LeftContent = props => <Avatar.Icon {...props} icon="pin" />;
+    return (
+            <View style={styles.cardContainer}>
+            <Card style={styles.cardBody}>
+              <Card.Title
+                title={job.company.display_name}
+                subtitle={`Category - ${job.category.label}`} left={LeftContent}               
+              />
+                <Card.Content>
+                <Title numberOfLines={1}>
+                  {job.title.replace(/<strong>/g, '').replace(/<\/strong>/g, '')}
+                </Title>
+                <Paragraph numberOfLines={1}>
+                  {job.location.display_name}
+                </Paragraph>
+                </Card.Content>
+                <View style={styles.mapContainer}>
+                <MapView
+                  scrollEnabled={false}
+                  style={{ flex: 1 }}
+                  cacheEnabled={Platform.OS === 'android'}
+                  initialRegion={initialRegion}
+                >
+                <Marker
+                    coordinate={{ latitude: job.latitude, longitude: job.longitude }}
+                    title={job.company.display_name}
+                    description={`Salary Min - ${job.salary_min} Salary Max - ${job.salary_max}`}
+                />
+                </MapView>
+                </View>
+              <Paragraph
+                style={styles.descriptionParagraph}
+                numberOfLines={4}
+              >
+                {job.description.replace(/<strong>/g, '').replace(/<\/strong>/g, '')}
+              </Paragraph>
+                <Card.Actions>
+                <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'center' , alignItems: 'center'}}>
+                <IconButton
+                    style={styles.iconButton}
+                    icon="thumb-up-outline"
+                    color={'red'}
+                    size={50}
+                    onPress={() => this.forceSwipe('right')}
+                />
+                <IconButton
+                    style={styles.iconButton}
+                    icon="thumb-down-outline"
+                    color={'red'}
+                    size={50}
+                    onPress={() => this.forceSwipe('left')}
+                />
+                </View>
+                </Card.Actions>
+            </Card>
+        </View>
+          );
+};
 
   renderCards = () => {
     if (this.state.index >= this.props.data.length) {
@@ -109,7 +179,7 @@ class Swipe extends Component {
             style={[this.getCardStyle(), styles.cardStyle, { zIndex: 99 }]}
             {...this.state.panResponder.panHandlers}
           >
-            {this.props.renderCard(item)}
+            {this.renderCard(item)}
           </Animated.View>
         );
       }
@@ -117,9 +187,9 @@ class Swipe extends Component {
       return (
         <Animated.View
           key={item[this.props.keyProp]}
-          style={[styles.cardStyle, { top: 10 * (i - this.state.index), zIndex: -i }]}
+          style={[styles.cardStyle, { top: 0 * (i - this.state.index), zIndex: -i }]}
         >
-          {this.props.renderCard(item)}
+          {this.renderCard(item)}
         </Animated.View>
       );
     });
@@ -140,7 +210,31 @@ const styles = {
   cardStyle: {
     position: 'absolute',
     width: SCREEN_WIDTH
-  }
+  },
+  cardContainer: {
+    flex: 1,
+    marginTop: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cardBody: {
+    width: SCREEN_WIDTH - 50,
+    borderWidth: 3,
+    borderColor: '#2B7A78',
+  },
+  mapContainer: {
+    height: 250,
+  },
+  descriptionParagraph: {
+    padding: 10,
+    textAlign: 'justify',
+  },
+  iconButton: {
+    borderWidth: 2,
+    borderColor: 'red',
+    marginHorizontal: 50,
+    marginBottom: 20,
+  },
 };
 
 export default Swipe;
