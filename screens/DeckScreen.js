@@ -5,12 +5,7 @@ import { connect } from 'react-redux';
 import Swipe from '../components/Swipe';
 
 class DeckScreen extends Component {
-
-  componentDidMount() {
-    this.props.navigation.setOptions({
-      tabBarBadge: this.props.jobs.length
-    });
-  }
+  
     renderNoMoreCards = () => (
           <Card title="No More Jobs">
             <Button
@@ -29,8 +24,7 @@ class DeckScreen extends Component {
                 data={this.props.jobs}
                 renderCard={this.renderCard}
                 renderNoMoreCards={this.renderNoMoreCards}
-                onSwipeRight={ () => {}}//job => this.props.likeJob(job) }
-                keyProp="jobkey"
+                onSwipeRight={() => {}}//job => this.props.likeJob(job) }
               />
           </View>
           );

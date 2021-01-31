@@ -90,7 +90,7 @@ class Swipe extends Component {
       }
     
     forceSwipe = (direction) => {
-        const x = direction === 'right' ? SCREEN_WIDTH + 100 : -SCREEN_WIDTH - 100;
+        const x = direction === 'right' ? SCREEN_WIDTH + 200 : -SCREEN_WIDTH - 200;
         Animated.timing(this.state.position, {
           toValue: { x, y: 0 },
           duration: SWIPE_OUT_DURATION,
@@ -105,36 +105,46 @@ class Swipe extends Component {
       latitudeDelta: 0.045,
       longitudeDelta: 0.02
     };
-    const LeftContent = props => <Avatar.Icon {...props} icon="pin" />;
+    const LeftContent = props => <Avatar.Text {...props} label={job.company.display_name[0]} />;
     return (
             <View style={styles.cardContainer}>
             <Card style={styles.cardBody}>
-              <Card.Title
+            <Card.Title
+                titleStyle={{ color: '#000' }}
+                subtitleStyle={{ color: '#000' }}
                 title={job.company.display_name}
-                subtitle={`Category - ${job.category.label}`} left={LeftContent}               
-              />
+                subtitle={`Category - ${job.category.label}`} left={LeftContent}
+                style={styles.textColor}               
+            />
+              <View style={styles.mapContainer}>
+                      <MapView
+                        scrollEnabled={false}
+                        style={{ flex: 1 }}
+                        cacheEnabled={Platform.OS === 'android'}
+                        initialRegion={initialRegion}
+                      >
+                      <Marker
+                          coordinate={{ latitude: job.latitude, longitude: job.longitude }}
+                          title={job.company.display_name}
+                          description={`Salary Min - ${job.salary_min} 
+                                        Salary Max - ${job.salary_max}`}
+                      />
+                    </MapView>
+                </View>
                 <Card.Content>
-                <Title numberOfLines={1}>
+                <Title
+                  numberOfLines={1}
+                  style={styles.textColor}
+                >
                   {job.title.replace(/<strong>/g, '').replace(/<\/strong>/g, '')}
                 </Title>
-                <Paragraph numberOfLines={1}>
+                <Paragraph 
+                  numberOfLines={1}
+                  style={styles.textColor}
+                >
                   {job.location.display_name}
                 </Paragraph>
                 </Card.Content>
-                <View style={styles.mapContainer}>
-                <MapView
-                  scrollEnabled={false}
-                  style={{ flex: 1 }}
-                  cacheEnabled={Platform.OS === 'android'}
-                  initialRegion={initialRegion}
-                >
-                <Marker
-                    coordinate={{ latitude: job.latitude, longitude: job.longitude }}
-                    title={job.company.display_name}
-                    description={`Salary Min - ${job.salary_min} Salary Max - ${job.salary_max}`}
-                />
-                </MapView>
-                </View>
               <Paragraph
                 style={styles.descriptionParagraph}
                 numberOfLines={4}
@@ -142,19 +152,19 @@ class Swipe extends Component {
                 {job.description.replace(/<strong>/g, '').replace(/<\/strong>/g, '')}
               </Paragraph>
                 <Card.Actions>
-                <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'center' , alignItems: 'center'}}>
+                <View style={styles.swipeButtonsContainer}>
                 <IconButton
                     style={styles.iconButton}
-                    icon="thumb-up-outline"
-                    color={'red'}
-                    size={50}
+                    icon="close-circle"
+                    color={'#C5C6C7'}
+                    size={60}
                     onPress={() => this.forceSwipe('right')}
                 />
                 <IconButton
                     style={styles.iconButton}
-                    icon="thumb-down-outline"
-                    color={'red'}
-                    size={50}
+                    icon="check-circle"
+                    color={'#2B7A78'}
+                    size={60}
                     onPress={() => this.forceSwipe('left')}
                 />
                 </View>
@@ -170,12 +180,13 @@ class Swipe extends Component {
     }
 
     const deck = this.props.data.map((item, i) => {
+      const border = 10 * (i - this.state.index);
       if (i < this.state.index) { return null; }
 
       if (i === this.state.index) {
         return (
           <Animated.View
-            key={item[this.props.keyProp]}
+            key={i}
             style={[this.getCardStyle(), styles.cardStyle, { zIndex: 99 }]}
             {...this.state.panResponder.panHandlers}
           >
@@ -186,8 +197,8 @@ class Swipe extends Component {
 
       return (
         <Animated.View
-          key={item[this.props.keyProp]}
-          style={[styles.cardStyle, { top: 0 * (i - this.state.index), zIndex: -i }]}
+          key={i}
+          style={[styles.cardStyle, { top: border, zIndex: -i }, { left: border, zIndex: -i }]}
         >
           {this.renderCard(item)}
         </Animated.View>
@@ -209,32 +220,47 @@ class Swipe extends Component {
 const styles = {
   cardStyle: {
     position: 'absolute',
-    width: SCREEN_WIDTH
+    width: SCREEN_WIDTH,
   },
   cardContainer: {
     flex: 1,
-    marginTop: 20,
+    marginTop: 45,
     alignItems: 'center',
     justifyContent: 'center',
   },
   cardBody: {
     width: SCREEN_WIDTH - 50,
-    borderWidth: 3,
-    borderColor: '#2B7A78',
+    
   },
   mapContainer: {
     height: 250,
   },
   descriptionParagraph: {
-    padding: 10,
+    padding: 15,
     textAlign: 'justify',
+    color: '#000'
   },
   iconButton: {
-    borderWidth: 2,
-    borderColor: 'red',
-    marginHorizontal: 50,
-    marginBottom: 20,
+    margin: 20,
+    backgroundColor: '#FFFFFF',
+    shadowColor: 'rgba(0, 0, 0, 0.1)',
+    shadowOpacity: 0.8,
+    elevation: 6,
+    shadowRadius: 15,
+    shadowOffset: {
+      width: 1,
+      height: 13
+    },
   },
+  textColor: {
+    color: '#000'
+  },
+  swipeButtonsContainer: {
+    flexDirection: 'row',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
 };
 
 export default Swipe;
