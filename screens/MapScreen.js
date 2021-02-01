@@ -172,34 +172,28 @@ class MapScreen extends Component {
                 region={this.state.region}
                 onRegionChangeComplete={this.onRegionChangeComplete}
               />
-                <View style={styles.buttonContainer}>
+                <View style={styles.textInputContainer}>
                     <TextInput
                         theme={{
                             colors: {
-                                placeholder: '#2B7A78', text: '#2B7A78',
+                                placeholder: 'gray', text: 'gray',
                             }
                         }}
                         style={{
-                            backgroundColor: 'transparent',
+                            marginTop: 20,
                             marginHorizontal: 40,
                             fontSize: 18,
                             marginBottom: 20,
                         }}
+                    mode="outlined"
                     placeholder="What job are you looking for ?"
                     value={this.props.searchQuery}
-                    underlineColor="#2B7A78"
                     onChangeText={text => this.onInputChange(text)}
-                    left={
-                        <TextInput.Icon
-                            color='#2B7A78'
-                            name="pen"
-                            size={35}
-                            style={{ marginTop: 10, marginLeft: -15 }}
-                        />
-                    }
                     />
+                </View>
+                <View style={styles.buttonContainer}>
               {this.renderSearchButton()}
-            </View>
+              </View>
             </View>
           );
     }
@@ -219,6 +213,12 @@ const styles = StyleSheet.create({
     activityIndicatorStyle: {
         flex: 1,
     },
+    textInputContainer: {
+        position: 'absolute',
+        top: 20,
+        left: 0,
+        right: 0
+    },
     buttonContainer: {
         position: 'absolute',
         bottom: 20,
@@ -227,7 +227,9 @@ const styles = StyleSheet.create({
     },
     buttonStyle: {
         marginHorizontal: 20,
-        width: SCREEN_WIDTH - 200,
+        width: SCREEN_WIDTH - 70,
+        height: 55,
+        justifyContent: 'center',
         alignSelf: 'center',
         padding: 5,
         borderRadius: 7,

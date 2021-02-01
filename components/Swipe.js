@@ -5,11 +5,10 @@ import {
   PanResponder,
   Dimensions,
   LayoutAnimation,
-  UIManager,
   Platform,
   LogBox,
 } from 'react-native';
-import { Card, Title, Paragraph, Avatar, IconButton } from 'react-native-paper';
+import { Card, Title, Paragraph, IconButton, Divider } from 'react-native-paper';
 import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
 
@@ -54,7 +53,6 @@ class Swipe extends Component {
   }
 
   componentDidUpdate() {
-    UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
     LayoutAnimation.spring();
   }
 
@@ -105,17 +103,17 @@ class Swipe extends Component {
       latitudeDelta: 0.045,
       longitudeDelta: 0.02
     };
-    const LeftContent = props => <Avatar.Text {...props} label={job.company.display_name[0]} />;
     return (
             <View style={styles.cardContainer}>
-            <Card style={styles.cardBody}>
+        <Card style={styles.cardBody}>
             <Card.Title
-                titleStyle={{ color: '#000' }}
-                subtitleStyle={{ color: '#000' }}
+                titleStyle={{ color: '#000', textAlign: 'center' }}
+                subtitleStyle={{ color: '#000', textAlign: 'center' }}
                 title={job.company.display_name}
-                subtitle={`Category - ${job.category.label}`} left={LeftContent}
+                subtitle={job.location.display_name} 
                 style={styles.textColor}               
             />
+          <Divider style={{ marginHorizontal: 15 }} />
               <View style={styles.mapContainer}>
                       <MapView
                         scrollEnabled={false}
@@ -138,13 +136,8 @@ class Swipe extends Component {
                 >
                   {job.title.replace(/<strong>/g, '').replace(/<\/strong>/g, '')}
                 </Title>
-                <Paragraph 
-                  numberOfLines={1}
-                  style={styles.textColor}
-                >
-                  {job.location.display_name}
-                </Paragraph>
                 </Card.Content>
+                <Divider style={{ marginHorizontal: 15 }} />
               <Paragraph
                 style={styles.descriptionParagraph}
                 numberOfLines={4}
@@ -158,14 +151,14 @@ class Swipe extends Component {
                     icon="close-circle"
                     color={'#C5C6C7'}
                     size={60}
-                    onPress={() => this.forceSwipe('right')}
+                    onPress={() => this.forceSwipe('left')}
                 />
                 <IconButton
                     style={styles.iconButton}
                     icon="check-circle"
                     color={'#2B7A78'}
                     size={60}
-                    onPress={() => this.forceSwipe('left')}
+                    onPress={() => this.forceSwipe('right')}
                 />
                 </View>
                 </Card.Actions>
@@ -233,7 +226,8 @@ const styles = {
     
   },
   mapContainer: {
-    height: 250,
+    height: 300,
+    margin: 15,
   },
   descriptionParagraph: {
     padding: 15,
@@ -241,7 +235,8 @@ const styles = {
     color: '#000'
   },
   iconButton: {
-    margin: 20,
+    marginTop: 0,
+    marginHorizontal: 20,
     backgroundColor: '#FFFFFF',
     shadowColor: 'rgba(0, 0, 0, 0.1)',
     shadowOpacity: 0.8,
@@ -253,13 +248,14 @@ const styles = {
     },
   },
   textColor: {
-    color: '#000'
+    color: '#000',
   },
   swipeButtonsContainer: {
     flexDirection: 'row',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: 11,
   }
 };
 

@@ -6,6 +6,8 @@ import {
     JOB_TITLE_CHANGE,
     ERROR, CLEAR_ERROR,
     INITLIALIZE_FETCH,
+    LIKED_JOB,
+    CLEAR_JOBS
 } from './types';
 
 const ROOT_URL = 'https://api.adzuna.com/v1/api/jobs/';
@@ -61,4 +63,12 @@ export const setCountry = (region, searchQuery, navigation) => (dispatch) => {
         }).catch((e) => {
             console.log(e);       
         });
-    };
+};
+    
+export const likeJob = (job) => ({
+        payload: job,
+        type: LIKED_JOB
+    });
+
+export const clearLikedJobs = () => ({ type: CLEAR_JOBS });
+
