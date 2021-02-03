@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
 import { View, StyleSheet, Dimensions, Alert } from 'react-native';
+import { Button } from 'react-native-paper';
 import { connect } from 'react-redux';
 
 class MarkersScreen extends Component {
@@ -52,8 +53,19 @@ class MarkersScreen extends Component {
                 latitudeDelta: 5.5,
             }}
             >
-                    {this.renderMarkers()}
-                    </MapView>
+                {this.renderMarkers()}
+                </MapView>
+                <View style={styles.buttonContainer}>
+                <Button
+                    dark
+                    style={styles.buttonStyle}
+                    icon={'cards-outline'}
+                    mode="contained"
+                    onPress={() => this.props.navigation.navigate('TabNav', { screen: 'Deck' })}
+                >
+                    {this.props.results.length} jobs found
+            </Button>
+            </View>
                 </View>
         );
     }
@@ -63,7 +75,22 @@ const styles = StyleSheet.create({
     map: {
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').height,
-    }
+    },
+    buttonStyle: {
+        marginHorizontal: 20,
+        width: Dimensions.get('window').width - 70,
+        height: 55,
+        justifyContent: 'center',
+        alignSelf: 'center',
+        padding: 5,
+        borderRadius: 7,
+    },
+    buttonContainer: {
+        position: 'absolute',
+        bottom: 70,
+        left: 0,
+        right: 0
+    },
 });
 
 const mapStateToProps = ({ job }) => ({

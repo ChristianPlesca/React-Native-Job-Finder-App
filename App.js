@@ -41,7 +41,7 @@ componentDidMount() {
 
     const SettingScreenNav = () => (
       <Stack.Navigator>
-        <Stack.Screen name="SettingScreen" component={SettingScreen} />
+        <Stack.Screen name="SettingScreen" options={{ title: 'Back' }} component={SettingScreen} />
       </Stack.Navigator>
     );
 
@@ -71,10 +71,10 @@ componentDidMount() {
           inactiveTintColor: 'gray',
         }}
       >
-          <Tab.Screen name="Map" component={MapScreen} />
-          <Tab.Screen name="Markers" component={MarkersScreen} />
-          <Tab.Screen name="Deck" options={{ title: 'Review' }} component={DeckScreen} />
-          <Tab.Screen name="Review" component={ReviewScreen} />
+          <Tab.Screen name="Map" options={{ title: 'Location' }} component={MapScreen} />
+          <Tab.Screen name="Markers" options={{ title: 'Results' }} component={MarkersScreen} />
+          <Tab.Screen name="Deck" options={{ title: 'Review Jobs' }} component={DeckScreen} />
+          <Tab.Screen name="Review" options={{ title: 'Apply Jobs' }} component={ReviewScreen} />
         </Tab.Navigator>
     );
     
